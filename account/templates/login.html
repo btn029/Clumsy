@@ -1,0 +1,120 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="icon" href="../../favicon.ico"> -->
+
+    <title>Login Clumsy</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<!--     <link href="/static/node_modules/bootstrap-3.3.7/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet"> -->
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'docs/examples/signin/signin.css' %}" rel="stylesheet">
+    <link href="{% static 'docs/examples/carousel/carousel.css' %}" rel="stylesheet">  
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="docs/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body class="text-center">
+        <div class="navbar-wrapper">
+          <div class="container">
+
+            <nav class="navbar navbar-inverse navbar-fixed-top">
+              <div class="container">
+                <div class="navbar-header">
+                  <a class="navbar-header" href="home"><img src="https://i.imgur.com/PvSdW8h.png" alt="logo" width="80" height="50" style="float:left;"/></a>   
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                  <ul class="nav navbar-nav">
+                    <li class="active"><a href="home">Home</a></li>
+                    <li><a href="about">About</a></li>
+                    <li><a href="contact">Contact</a></li>
+                    <li><a href="buy">Buy Now</a></li>
+                    </ul>
+                  <ul class="nav navbar-nav" style="float:right;">
+                      <li><a href="login">Log In</a></li>
+                      <li><a href="signup">Sign Up</a></li>
+                  </ul>
+                    
+                </div>
+              </div>
+            </nav>
+
+          </div>
+        </div>
+
+    <div class="container">
+      
+      {% block content %}
+      <h2>Login</h2>
+      <form method="post">
+        {% csrf_token %}
+          {{form.email}}
+        <button type="submit">Login</button>
+      </form>
+      {% endblock %}
+      <!--<form class="form-signin" name="loginform" id="loginform" method="post">
+        <img class="mb-4" src="https://i.imgur.com/PvSdW8h.png" alt="logo" width="300" height="150">  
+        <h2 class="form-signin-heading">Please sign in</h2>
+        {% csrf_token %}
+          <p>{{ form.non_field_errors }}</p>
+          <table>
+            <tr>
+                {{form.email.errors}}
+                <th>Email</th>
+                <td>{{form.email}}</td>
+            </tr>
+            <tr>
+                {{form.password.errors}}
+                <th>Password</th>
+                <td>{{form.password}}</td>
+            </tr>
+        </table>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="remember-me"> Remember me
+            </label>
+          </div>
+            <a class="btn btn-lg btn-primary btn-block" href="home" role="button">Sign in</a>
+          <p class="mt-5 mb-3 text-muted">© Kiwi Products, Inc. 2018</p>
+      </form>-->
+        
+    </div> <!-- /container -->
+
+
+        <!-- jQuery -->
+        <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+
+        <!-- Bootstrap Core JavaScript -->
+        <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+    
+        <!-- Plugin JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" integrity="sha384-mE6eXfrb8jxl0rzJDBRanYqgBxtJ6Unn4/1F7q4xRRyIw7Vdg9jP4ycT7x1iVsgb" crossorigin="anonymous"></script>
+    
+        <!-- Contact Form JavaScript -->
+        <script src="{% static 'js/jqBootstrapValidation.js' %}"></script>
+        <script src="{% static 'js/contact_me.js' %}"></script>
+    
+        <!-- Theme JavaScript -->
+        <script src="{% static 'js/agency.min.js' %}"></script>
+  </body>
+</html>
