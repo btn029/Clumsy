@@ -4,47 +4,44 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import MultiValueDictKeyError
 from django.core.files.images import ImageFile
 from django.core.files.base import File
+from django.contrib.auth import logout as django_logout
+from django import forms
+from django.contrib import messages
 
-from .models import User, Post, Comment
+from .models import Employee, Post, Comment
 from .forms import SignupForm, LoginForm, PostForm, CommentForm
 
-import hashlib   # password hasher
+import hashlib 
 from datetime import datetime
 
-# helper function to save all post info in one object
+# helper function to save all comment info in one object
 def getComment(postObj):
     return{
         'post': postObj.post,
-        'user': commentObj.user,
+        'employee': commentObj.employee,
         'when': commentObj.when
     }
 
-#   helper function to save all user info in one object
-def getUser(userObj):
+#   helper function to save all employee info in one object
+def getEmployee(employeeObj):
     return {
-        'firstName': userObj.firstName,
-        'lastName': userObj.lastName,
-        'email': userObj.email,
-        'password': userObj.password,
-        'phone': userObj.phone,
-        'address': userObj.address,
-        'department': userObj.department
+        'firstName': employeeObj.firstName,
+        'lastName': employeeObj.lastName,
+        'email': employeeObj.email,
+        'password': employeeObj.password,
+        'phone': employeeObj.phone,
+        'address': employeeObj.address,
+        'department': employeeObj.department,
+        'profilePic': employeeObj.profilePic
     }
 
 # helper function to save all comment info in one object
 def getComment(commentObj):
     return{
         'comment': commentObj.comment,
-        'user': commentObj.user,
+        'employee': commentObj.employee,
         'when': commentObj.when
     }
-
-def index(request):
-    try:
-        del request.session['email']
-    except:
-        pass
-    return render_to_response('login.html')
 
 # controller for creating a new account
 def signup(request):
@@ -56,117 +53,144 @@ def signup(request):
             pwdEncrypt = hashlib.sha224(form.cleaned_data['password']).hexdigest()
 
             #save the information in the form to variables
-            userType = form.cleaned_data['userType']
             firstName = form.cleaned_data['firstName']
             lastName = form.cleaned_data['lastName']
             email = form.cleaned_data['email']
             password = pwdEncrypt
             phone = form.cleaned_data['phone']
             address = form.cleaned_data['address']
+            department = form.cleaned_data['department']
 
-            userObj = User(
-                firstName=firstName,
-                lastName=lastName,
-                email=email,
-                password=password,
-                phone=phone,
-                address=address)
-            barberObj.save()    #save to database this new barber
+            try:
+                profilePic = request.FILES['profilePic']
+                profPic = True
+            except MultiValueDictKeyError:
+                profPic = False
+                pass
+
+            if Employee.objects.filter(email=email).exists():
+                raise forms.ValidationError("This email is already in use")
+            if(profPic):    
+                employeeObj = Employee(
+                    firstName=firstName,
+                    lastName=lastName,
+                    email=email,
+                    password=password,
+                    phone=phone,
+                    address=address,
+                    department=department,
+                    profilePic = profilePic)
+            else:
+                    employeeObj = Employee(
+                    firstName=firstName,
+                    lastName=lastName,
+                    email=email,
+                    password=password,
+                    phone=phone,
+                    address=address,
+                    department=department)
+
+            employeeObj.save()    #save to database this new employee
             request.session['email'] = email
-            outURL = '{0}/{1}'.format(email,'userhome.html', {'email': email})
+            outURL = '{0}/{1}'.format(email,'employeehome', {'email': email})
             return HttpResponseRedirect(outURL)
 
     else:
         form = SignupForm()
     #signup.html posts to this same page and then this view will redirect
-    return render(request, 'account/signup.html', {'form': form})
+    return render(request, 'signup.html', {'form': form})
 
 def login(request):
     if(request.session.has_key('email')):
         email = request.session['email']
         try:
-            userObj = User.objects.get(email=email)
-            returnUser = getUser(userObj)
-            outURL = '{0}/{1}'.format(email,'userhome.html')
+            employeeObj = Employee.objects.get(email=email)
+            returnEmployee = getEmployee(employeeObj)
+            outURL = '{0}/{1}'.format(email,'employeehome')
             return HttpResponseRedirect(outURL, {'email': email})
         except ObjectDoesNotExist:
             pass
 
     else:
         if (request.method == 'POST'):
-            form = LoginForm(request.POST)#
+            form = LoginForm(request.POST)
 
             if (form .is_valid()):
                 pwdEncrypt = hashlib.sha224(form.cleaned_data['password']).hexdigest()
-                userType = form.cleaned_data['userType']
                 email = form.cleaned_data['email']
                 password = pwdEncrypt
  
                 try:
-                    userObj = User.objects.get(email=email)
-                    returnUser = getUser(userObj)
-                    if (password == userObj.password):
+                    employeeObj = Employee.objects.get(email=email)
+                    returnEmployee = getEmployee(employeeObj)
+                    if (password == employeeObj.password):
                         request.session['email'] = email
-                        outURL = '{0}/{1}'.format(email,'userhome.html')
+                        outURL = '{0}/{1}'.format(email,'employeehome')
                         return HttpResponseRedirect(outURL, {'email': email})
                 except ObjectDoesNotExist:
+                    messages.info(request, 'E-mail is not registered or Password is incorrect.')
                     pass
         else:
             form = LoginForm()
 
-        return render(request, 'account/login.html', {'form': form})
+        return render(request, 'login.html', {'form': form})
 
-def postlist(request, userEmail):
+def logout(request):
+    django_logout(request)
+    request.session.flush()
+    # Redirect to a success page.
+    messages.info(request, 'Successfully logged out!')
+    form = LoginForm()
+    return HttpResponseRedirect("/")
+
+def postlist(request, employeeEmail):
     return render(request, 'account/postlist.html')
 
-def userhome(request, userEmail):
+def employeehome(request, employeeEmail):
     if (request.session.has_key('email')):
-        if(clientEmail == request.session['email']):
+        if(employeeEmail == request.session['email']):
             email = request.session['email']
             try:
-                clientObj = Client.objects.get(email=clientEmail)
-                returnClient = getClient(clientObj)
+                employeeObj = Employee.objects.get(email=employeeEmail)
+                returnEmployee = getEmployee(employeeObj)
 
             except ObjectDoesNotExist:
-                return HttpResponseRedirect('../login.html')
+                return HttpResponseRedirect('login')
 
-            try:
-                # get a list of appointments associated with this client
-                apptQuery = Appointment.objects.filter(client=clientObj)
-                apptList = [getAppointment(singleAppt) for singleAppt in apptQuery]
+            #try:
+                # get a list of posts associated with this employee
+                #apptQuery = Appointment.objects.filter(client=clientObj)
+                #apptList = [getAppointment(singleAppt) for singleAppt in apptQuery]
 
-            except ObjectDoesNotExist:
-                apptList = ""
+            #except ObjectDoesNotExist:
+                #apptList = ""
 
-            reviewQuery = []
+            #reviewQuery = []
             # get a list of a reviews based on the list of appointments 
-            for oneAppt in apptQuery:
-                try:
-                    reviewQuery.append(oneAppt.review_set.all().exclude(writer=clientEmail).get())
-                except ObjectDoesNotExist:
-                    pass
+            #for oneAppt in apptQuery:
+                #try:
+                    #reviewQuery.append(oneAppt.review_set.all().exclude(writer=clientEmail).get())
+                #except ObjectDoesNotExist:
+                    #pass
 
-            if(len(reviewQuery) > 0):
-                reviewList = [getReview(reviewObj) for reviewObj in reviewQuery]
-            else:
-                reviewList = ""
+            #if(len(reviewQuery) > 0):
+                #reviewList = [getReview(reviewObj) for reviewObj in reviewQuery]
+            #else:
+                #reviewList = ""
 
-            return render(request, 'account/userhome.html', 
-                          {'client': returnClient,
-                            'apptList': apptList,
-                            'reviewList': reviewList} )
+            return render(request, 'employeehome.html', {'employee': returnEmployee})
 
-    return HttpResponseRedirect('../login.html')
+    return HttpResponseRedirect('login')
 
 
-def userprofile(request, userEmail):
+def employeeprofile(request, employeeEmail):
     # filter through the client table by matching emails
-    userObj = User.objects.get(email=userEmail)
-    returnUser = getUser(userObj)
+    employeeObj = Employee.objects.get(email=employeeEmail)
+    returnEmployee = getEmployee(employeeObj)
 
     try:
         # get a list of appointments associated with this client
-        postQuery = post.objects.filter(client=userObj)
+        postQuery = post.objects.filter(client=employeeObj)
         postList = [getPost(singlePost) for singlePost in postQuery]
 
     except ObjectDoesNotExist:
@@ -174,7 +198,7 @@ def userprofile(request, userEmail):
 
     # send the information about the particular client with matching
     # email to clientprofile.html
-    return render(request, 'account/userprofile.html', 
+    return render(request, 'account/employeeprofile.html', 
                   {'client': returnClient,
                     'postList': postList,
                     'reviewList': reviewList} )
@@ -210,7 +234,7 @@ def editclient(request, clientEmail):
                         clientObj.description = description
                         clientObj.save()
                         
-                        return HttpResponseRedirect('clientprofile.html')
+                        return HttpResponseRedirect('employeeprofile.html')
 
                 else:
                     form = EditClientForm(initial = data)
@@ -269,15 +293,15 @@ def makeappointment(request, barberEmail):
     #if fail to have session redirect to login
     return HttpResponseRedirect('../../login.html')
 
-def post(request, postId, userEmail):
+def post(request, postId, employeeEmail):
     return render(request, 'account/post.html')
 
-def editpost(request, postId, userEmail):
+def editpost(request, postId, employeeEmail):
     return render(request, 'account/editpost.html')
 
 def newpost(request, apptReviewID):
     if(request.session.has_key('email')):
-        userEmail = request.session['email']
+        employeeEmail = request.session['email']
 
         # get the appointment associated
         apptObj=Appointment.objects.get(pk=apptReviewID)
@@ -295,16 +319,16 @@ def newpost(request, apptReviewID):
                 # review already exists for this client and appt
                 if(apptObj.review_set.count() > 0):
                     try:
-                        reviewObj = apptObj.review_set.get(writer=userEmail)
+                        reviewObj = apptObj.review_set.get(writer=employeeEmail)
                         reviewObj.comment = comment
                         reviewObj.save()
                     except ObjectDoesNotExist: # new review must be made
-                        reviewObj = Review(comment=comment, writer=userEmail,appointment=apptObj)
+                        reviewObj = Review(comment=comment, writer=employeeEmail,appointment=apptObj)
                         reviewObj.save()
                 else:
-                    reviewObj = Review(comment=comment, writer=userEmail,appointment=apptObj)
+                    reviewObj = Review(comment=comment, writer=employeeEmail,appointment=apptObj)
                     reviewObj.save()
-                outURL = '../{0}/userhome.html'.format(userEmail)
+                outURL = '../{0}/employeehome.html'.format(employeeEmail)
                 return HttpResponseRedirect(outURL)
         else:
             form = ReviewForm()

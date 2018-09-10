@@ -7,15 +7,16 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    url(r'^$', v.index, name='index'),
-    url(r'^account/signup.html$', v.signup, name='signup'),
-    url(r'^account/login.html$', v.login, name='login'),
-    url(r'^account/(?P<userEmail>.*)/postlist.html$', v.postlist, name='postlist'),
-    url(r'^account/(?P<userEmail>.*)/userhome.html$', v.userhome, name='userhome'),
-    url(r'^account/(?P<postId>.*)/post.html$', v.post, name='post'),
-    url(r'^account/(?P<postId>.*)/editpost.html$', v.editpost, name='editpost'),
-    url(r'^account/(?P<userEmail>.*)/newpost.html$', v.newpost, name='newpost'),
-    url(r'account/(?P<apptReviewID>[0-9]+)/delete$', v.deletepost, name='deletepost')
+    url(r'^signup$', v.signup, name='signup'),
+    url(r'^$', v.login, name='login'),
+    url(r'^login$', v.login, name='login'),
+    url(r'^logout$', v.logout,  name='logout'),
+    url(r'^(?P<employeeEmail>.*)/postlist.html$', v.postlist, name='postlist'),
+    url(r'^(?P<employeeEmail>.*)/employeehome$', v.employeehome, name='employeehome'),
+    url(r'^(?P<postId>.*)/post.html$', v.post, name='post'),
+    url(r'^(?P<postId>.*)/editpost.html$', v.editpost, name='editpost'),
+    url(r'^(?P<employeeEmail>.*)/newpost.html$', v.newpost, name='newpost'),
+    url(r'^(?P<apptReviewID>[0-9]+)/delete$', v.deletepost, name='deletepost')
 
 
 ]   

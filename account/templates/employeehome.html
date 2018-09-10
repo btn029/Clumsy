@@ -1,0 +1,110 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Employee Home</title>
+    
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    
+    <!-- Custom styles for this template -->
+    <link href="{% static 'docs/examples/signin/signin.css' %}" rel="stylesheet">
+    <link href="{% static 'docs/examples/carousel/carousel.css' %}" rel="stylesheet">  
+    <!-- Theme CSS -->
+    <link href="{% static 'css/agency.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/employeehome.css' %}" rel="stylesheet">
+    <link href="{% static 'css/stylesheet.css' %}" rel="stylesheet">
+</head>
+    
+<body id="page-top" class="index">  
+    
+    <!-- Navigation -->
+    <div class="navbar-wrapper">
+            <div class="container">
+  
+              <nav class="navbar navbar-inverse navbar-fixed-top">
+                <div class="container">
+                  <div class="navbar-header">
+                    <a class="navbar-header" href="employeehome"><img src="https://i.imgur.com/PvSdW8h.png" alt="logo" width="80" height="50" style="float:left;"/></a>   
+                  </div>
+                  <div id="navbar" class="navbar-collapse collapse">
+  
+                    <ul class="nav navbar-nav" style="float:right;">
+                        <li class="active"><a href="employeehome">Home</a></li>
+                        <li><a href="/">Posts</a></li>
+                        <li><a href="{% url 'account:logout' %}">Log Out</a></li>
+                    </ul>
+                      
+                  </div>
+                </div>
+              </nav>
+  
+            </div>
+    </div>
+    
+    <section id="employeehome">
+        {% if employee %}
+        <div class="container text-center">    
+            <div class="row">
+                <div class="col-sm-3 well">
+                    <div class="well">
+                        <h4><b>{{employee.firstName}} {{employee.lastName}}</b></h4>      
+                        {% if employee.profilePic %}
+                            <img src="{{employee.profilePic.url}}" class="img-thumbnail" height="100" width="100" alt="profile pic">
+                        {% else %}
+                            <img src="{% static 'media/no-img.png' %}" class="img-thumbnail" height="100" width="100" alt="no img">
+                        {% endif %}
+                        <p><br><b>Address:</b><br>{{employee.address}}</p>
+                        <p><br><b>Department:</b><br>{{employee.department}}</p>
+                        <p><br><b>Phone Number:</b><br>{{employee.phone}}</p>
+                        <p><br><b>E-Mail:</b><br>{{employee.email}}</p>
+
+                    </div>    
+                    <p><a href="editprofile.html" style="color:black">Edit Profile</a></p>
+                </div>
+
+                <div class="col-sm-9">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel panel-default text-left">
+                                <div class="row" style="text-align:center">
+                                    <a href="postList" class="btn btn-xl">Find Posts</a>
+                                </div> 
+                                    <div class="panel-body" style="text-align:center">
+                                        <h3 class="section-heading">Posts</h3>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        </div>
+    </section>
+    
+    <!-- jQuery -->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" integrity="sha384-mE6eXfrb8jxl0rzJDBRanYqgBxtJ6Unn4/1F7q4xRRyIw7Vdg9jP4ycT7x1iVsgb" crossorigin="anonymous"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="{% static 'js/jqBootstrapValidation.js' %}"></script>
+    <script src="{% static 'js/contact_me.js' %}"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="{% static 'js/agency.min.js' %}"></script>
+</body>
+</html>   

@@ -41,17 +41,12 @@
             <nav class="navbar navbar-inverse navbar-fixed-top">
               <div class="container">
                 <div class="navbar-header">
-                  <a class="navbar-header" href="home"><img src="https://i.imgur.com/PvSdW8h.png" alt="logo" width="80" height="50" style="float:left;"/></a>   
+                  <a class="navbar-header" href="/"><img src="https://i.imgur.com/PvSdW8h.png" alt="logo" width="80" height="50" style="float:left;"/></a>   
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
-                  <ul class="nav navbar-nav">
-                    <li class="active"><a href="home">Home</a></li>
-                    <li><a href="about">About</a></li>
-                    <li><a href="contact">Contact</a></li>
-                    <li><a href="buy">Buy Now</a></li>
-                    </ul>
+
                   <ul class="nav navbar-nav" style="float:right;">
-                      <li><a href="login">Log In</a></li>
+                      <li class="active"><a href="/">Log In</a></li>
                       <li><a href="signup">Sign Up</a></li>
                   </ul>
                     
@@ -63,40 +58,34 @@
         </div>
 
     <div class="container">
+      {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
       
-      {% block content %}
-      <h2>Login</h2>
-      <form method="post">
-        {% csrf_token %}
-          {{form.email}}
-        <button type="submit">Login</button>
-      </form>
-      {% endblock %}
-      <!--<form class="form-signin" name="loginform" id="loginform" method="post">
+     <form class="form-signin" name="loginform" id="loginform" method="post">
         <img class="mb-4" src="https://i.imgur.com/PvSdW8h.png" alt="logo" width="300" height="150">  
         <h2 class="form-signin-heading">Please sign in</h2>
         {% csrf_token %}
           <p>{{ form.non_field_errors }}</p>
-          <table>
-            <tr>
-                {{form.email.errors}}
-                <th>Email</th>
-                <td>{{form.email}}</td>
-            </tr>
-            <tr>
-                {{form.password.errors}}
-                <th>Password</th>
-                <td>{{form.password}}</td>
-            </tr>
-        </table>
+          <label for="inputEmail" class="sr-only">Email address</label>
+          {{form.email}}
+          <p>{{ form.non_field_errors }}</p>
+          <label for="inputPassword" class="sr-only">Password</label>
+          {{form.password}}
           <div class="checkbox">
             <label>
               <input type="checkbox" value="remember-me"> Remember me
             </label>
           </div>
-            <a class="btn btn-lg btn-primary btn-block" href="home" role="button">Sign in</a>
-          <p class="mt-5 mb-3 text-muted">© Kiwi Products, Inc. 2018</p>
-      </form>-->
+            <button type="submit" class="btn btn-lg btn-primary btn-block" onclick="">LOGIN</button>
+            <a href="signup">New User? Sign up here!</a>
+          <p class="mt-5 mb-3 text-muted">©ServiceNow, Inc. 2018</p>
+
+      </form>
         
     </div> <!-- /container -->
 
