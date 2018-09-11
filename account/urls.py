@@ -11,12 +11,12 @@ urlpatterns = [
     url(r'^$', v.login, name='login'),
     url(r'^login$', v.login, name='login'),
     url(r'^logout$', v.logout,  name='logout'),
-    url(r'^(?P<employeeEmail>.*)/postlist.html$', v.postlist, name='postlist'),
+    url(r'^(?P<employeeEmail>.*)/postlist$', v.postlist, name='postlist'),
     url(r'^(?P<employeeEmail>.*)/employeehome$', v.employeehome, name='employeehome'),
-    url(r'^(?P<postId>.*)/post.html$', v.post, name='post'),
-    url(r'^(?P<postId>.*)/editpost.html$', v.editpost, name='editpost'),
-    url(r'^(?P<employeeEmail>.*)/newpost.html$', v.newpost, name='newpost'),
-    url(r'^(?P<apptReviewID>[0-9]+)/delete$', v.deletepost, name='deletepost')
+    url(r'^(?P<postId>.*)/post$', v.post, name='post'),
+    url(r'^(?P<postId>.*)/editpost$', v.editpost, name='editpost'),
+    url(r'^(?P<employeeEmail>.*)/newpost$', v.newpost, name='newpost'),
+    url(r'^(?P<postId>[0-9]+)/delete$', v.deletepost, name='deletepost')
 
 
 ]   

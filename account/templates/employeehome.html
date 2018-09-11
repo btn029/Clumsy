@@ -19,10 +19,6 @@
     <!-- Custom styles for this template -->
     <link href="{% static 'docs/examples/signin/signin.css' %}" rel="stylesheet">
     <link href="{% static 'docs/examples/carousel/carousel.css' %}" rel="stylesheet">  
-    <!-- Theme CSS -->
-    <link href="{% static 'css/agency.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/employeehome.css' %}" rel="stylesheet">
-    <link href="{% static 'css/stylesheet.css' %}" rel="stylesheet">
 </head>
     
 <body id="page-top" class="index">  
@@ -40,7 +36,7 @@
   
                     <ul class="nav navbar-nav" style="float:right;">
                         <li class="active"><a href="employeehome">Home</a></li>
-                        <li><a href="/">Posts</a></li>
+                        <li><a href="postlist">Posts</a></li>
                         <li><a href="{% url 'account:logout' %}">Log Out</a></li>
                     </ul>
                       
@@ -77,7 +73,8 @@
                         <div class="col-sm-12">
                             <div class="panel panel-default text-left">
                                 <div class="row" style="text-align:center">
-                                    <a href="postList" class="btn btn-xl">Find Posts</a>
+                                    <br>
+                                    <a class="btn btn-lg btn-primary" href="postlist" role="button">Search Posts</a>
                                 </div> 
                                     <div class="panel-body" style="text-align:center">
                                         <h3 class="section-heading">Posts</h3>

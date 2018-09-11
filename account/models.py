@@ -3,6 +3,8 @@ from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from datetime import datetime#
+from tinymce import models as tinymce_models
+import uuid
     
 @python_2_unicode_compatible
 class Employee(models.Model):
@@ -21,15 +23,18 @@ class Employee(models.Model):
 @python_2_unicode_compatible
 class Post(models.Model):
     when = datetime.now
-    post = models.TextField()
+    post = models.CharField(max_length=10000)
+    postId= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     employee = models.ForeignKey(Employee,on_delete=models.CASCADE)
+    status = models.CharField(max_length=200)
     def __str__(self):
         return 'Posted by %s %s at %s' % (self.employee.firstName, self.employee.lastName, self.when)
 
 @python_2_unicode_compatible
 class Comment(models.Model):
     when = datetime.now
-    comment = models.TextField()
+    comment = models.TextField(null=False, blank=False)
+    commentId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     employee = models.ForeignKey(Employee,on_delete=models.CASCADE)
     def __str__(self):
         return 'Posted by %s %s at %s' % (self.employee.firstName, self.employee.lastName, self.when)

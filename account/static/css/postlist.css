@@ -1,0 +1,14 @@
+table, th, td, tr{
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 1.0em;
+    margin-top: 1.0em;
+    border: 1px solid black;
+}
+
+li{
+    margin-right: auto;
+    margin-left: auto;
+    list-style-position: inside;
+    text-align: center;
+}

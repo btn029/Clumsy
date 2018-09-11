@@ -11,15 +11,17 @@ from django.contrib import messages
 from .models import Employee, Post, Comment
 from .forms import SignupForm, LoginForm, PostForm, CommentForm
 
-import hashlib 
+import hashlib
 from datetime import datetime
 
 # helper function to save all comment info in one object
-def getComment(postObj):
+def getPost(postObj):
     return{
         'post': postObj.post,
-        'employee': commentObj.employee,
-        'when': commentObj.when
+        'employee': postObj.employee,
+        'when': postObj.when,
+        'subject': postObj.subject,
+        'postId': postObj.postId
     }
 
 #   helper function to save all employee info in one object
@@ -143,9 +145,6 @@ def logout(request):
     form = LoginForm()
     return HttpResponseRedirect("/")
 
-def postlist(request, employeeEmail):
-    return render(request, 'account/postlist.html')
-
 def employeehome(request, employeeEmail):
     if (request.session.has_key('email')):
         if(employeeEmail == request.session['email']):
@@ -234,7 +233,7 @@ def editclient(request, clientEmail):
                         clientObj.description = description
                         clientObj.save()
                         
-                        return HttpResponseRedirect('employeeprofile.html')
+                        return HttpResponseRedirect('employeehome')
 
                 else:
                     form = EditClientForm(initial = data)
@@ -243,17 +242,11 @@ def editclient(request, clientEmail):
                 pass
     return HttpResponseRedirect('../login.html')
 
-def findbarber(request, clientEmail):
+def postlist(request, employeeEmail):
     if (request.session.has_key('email')):
         email = request.session['email']
-        barber_array = Barber.objects.all()
-        try:
-            clientObj = Client.objects.get(email=clientEmail)
-            barberList = Barber.objects.all()            
-            return render(request, 'account/findbarber.html',{'barberList': barberList})
-        except ObjectDoesNotExist:
-            pass
-    return HttpResponseRedirect('../login.html')
+        post_array = Post.objects.all()
+        return render(request, 'postlist.html')
 
 def makeappointment(request, barberEmail):
     if (request.session.has_key('email')):
@@ -299,15 +292,14 @@ def post(request, postId, employeeEmail):
 def editpost(request, postId, employeeEmail):
     return render(request, 'account/editpost.html')
 
-def newpost(request, apptReviewID):
+def newpost(request, employeeEmail):
     if(request.session.has_key('email')):
         employeeEmail = request.session['email']
 
         # get the appointment associated
-        apptObj=Appointment.objects.get(pk=apptReviewID)
-        passAppt=getAppointment(apptObj)
+        employeeObj=Employee.objects.get(email=employeeEmail)
         if(request.method == 'POST'):
-            form = ReviewForm(data=request.POST)
+            form = PostForm(data=request.POST)
 
             print("form is " + str(form.is_valid()))
             if (form.is_valid()):
@@ -317,24 +309,24 @@ def newpost(request, apptReviewID):
                 print("number of reviews:" + str(apptObj.review_set.all()))
                 
                 # review already exists for this client and appt
-                if(apptObj.review_set.count() > 0):
-                    try:
-                        reviewObj = apptObj.review_set.get(writer=employeeEmail)
-                        reviewObj.comment = comment
-                        reviewObj.save()
-                    except ObjectDoesNotExist: # new review must be made
-                        reviewObj = Review(comment=comment, writer=employeeEmail,appointment=apptObj)
-                        reviewObj.save()
-                else:
-                    reviewObj = Review(comment=comment, writer=employeeEmail,appointment=apptObj)
-                    reviewObj.save()
-                outURL = '../{0}/employeehome.html'.format(employeeEmail)
-                return HttpResponseRedirect(outURL)
+                #if(apptObj.review_set.count() > 0):
+                 #   try:
+                 #       postObj = apptObj.review_set.get(writer=employeeEmail)
+                 #       reviewObj.comment = comment
+                 #       reviewObj.save()
+                 #   except ObjectDoesNotExist: # new review must be made
+                 #       reviewObj = Review(comment=comment, writer=employeeEmail,appointment=apptObj)
+                 #       reviewObj.save()
+                #else:
+                #    reviewObj = Review(comment=comment, writer=employeeEmail,appointment=apptObj)
+                #    reviewObj.save()
+                #outURL = '../{0}/employeehome.html'.format(employeeEmail)
+                #return HttpResponseRedirect(outURL)
         else:
-            form = ReviewForm()
-        return render(request, "account/newpost.html", {'form': form, 'appointment': passAppt})
+            form = PostForm()
+        return render(request, "newpost.html", {'form': form})
 
-    return HttpResponseRedirect('../../login.html')
+    return HttpResponseRedirect('postlist')
 
 
 def deletepost(request, postId):
