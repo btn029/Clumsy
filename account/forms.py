@@ -2,7 +2,7 @@ from django import forms
 from django.forms import DateTimeField
 from account.models import Employee
 from django.db import models
-from datetime import datetime#
+from datetime import datetime
 from tinymce.widgets import TinyMCE
 
 class SignupForm(forms.Form):
@@ -27,7 +27,6 @@ class PostForm(forms.Form):
         ('NotAnonymous', 'As me')
     ]
     anonymity = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect())
-    when = datetime.now
     subject = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Subject', 'size': 40, 'class': 'form-control'}))
     post = forms.CharField(widget=TinyMCE(attrs={'cols': 181, 'rows': 15}))
 

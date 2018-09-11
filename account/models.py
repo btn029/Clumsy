@@ -22,17 +22,18 @@ class Employee(models.Model):
 
 @python_2_unicode_compatible
 class Post(models.Model):
-    when = datetime.now
+    when = models.CharField(max_length=200, default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     post = models.CharField(max_length=10000)
+    subject = models.CharField(max_length=1000)
     postId= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     employee = models.ForeignKey(Employee,on_delete=models.CASCADE)
-    status = models.CharField(max_length=200)
+    status = models.CharField(max_length=200, default="Unresolved")
     def __str__(self):
-        return 'Posted by %s %s at %s' % (self.employee.firstName, self.employee.lastName, self.when)
+        return 'Posted by %s %s at %s postId: %s' % (self.employee.firstName, self.employee.lastName, self.when, self.postId)
 
 @python_2_unicode_compatible
 class Comment(models.Model):
-    when = datetime.now
+    when = models.CharField(max_length=200)
     comment = models.TextField(null=False, blank=False)
     commentId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     employee = models.ForeignKey(Employee,on_delete=models.CASCADE)

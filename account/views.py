@@ -83,7 +83,7 @@ def signup(request):
                     department=department,
                     profilePic = profilePic)
             else:
-                    employeeObj = Employee(
+                employeeObj = Employee(
                     firstName=firstName,
                     lastName=lastName,
                     email=email,
@@ -301,27 +301,18 @@ def newpost(request, employeeEmail):
         if(request.method == 'POST'):
             form = PostForm(data=request.POST)
 
-            print("form is " + str(form.is_valid()))
             if (form.is_valid()):
-                comment=form.cleaned_data['comment']
-
-                #get review of the appointment
-                print("number of reviews:" + str(apptObj.review_set.all()))
-                
-                # review already exists for this client and appt
-                #if(apptObj.review_set.count() > 0):
-                 #   try:
-                 #       postObj = apptObj.review_set.get(writer=employeeEmail)
-                 #       reviewObj.comment = comment
-                 #       reviewObj.save()
-                 #   except ObjectDoesNotExist: # new review must be made
-                 #       reviewObj = Review(comment=comment, writer=employeeEmail,appointment=apptObj)
-                 #       reviewObj.save()
-                #else:
-                #    reviewObj = Review(comment=comment, writer=employeeEmail,appointment=apptObj)
-                #    reviewObj.save()
-                #outURL = '../{0}/employeehome.html'.format(employeeEmail)
-                #return HttpResponseRedirect(outURL)
+                post = form.cleaned_data['post']
+                subject = form.cleaned_data['subject']
+                date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                postObj = Post(
+                    post=post,
+                    employee=employeeObj,
+                    when=date,
+                    subject=subject,
+                )
+                postObj.save()
+                return HttpResponseRedirect('postlist')
         else:
             form = PostForm()
         return render(request, "newpost.html", {'form': form})
