@@ -4,14 +4,24 @@
 <html lang="en">
 
 <head>
-
+    <style>
+        button {
+            background:none!important;
+            color: #0000EE;
+            border:none; 
+            padding:0!important;
+            font: inherit;
+            /*border is optional*/ 
+            cursor: pointer;
+        }    
+    </style>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Employee Home</title>
+    <title>List of Posts</title>
     
     <!-- Bootstrap Core CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -59,16 +69,33 @@
                                 <br>
                                 <form type="get" action="." style="margin: 0; float:right">
                                     <input  id="search_box" type="text" name="search_box"  placeholder="Search..." >
-                                    <button id="search_submit" type="submit" >Submit</button>
+                                    <button id="search_submit" type="submit" class="btn btn-lg" style="background-color:lightgray">Submit</button>
                                 </form>
                                 <br>
                                 <table width="100%">
                                     <tr>
-                                        <td width="15%">Author Name</td>
+                                        <td width="15%">Author</td>
                                         <td width="30%">Subject</td>
+                                        <td width="5%"># of Replies</td>
                                         <td width="5%">Time/Date</td>
                                         <td width="15%">Status</td>
                                     </tr>
+                                    {% for post in posts %}
+                                        <tr style="color: #0000EE">
+                                            <form class="form-signin" method="POST">
+                                                {% csrf_token %}
+                                                {% if post.anonymity == "Anonymous" %}
+                                                    <td width="15%" style="text-align:center; color:black">Anonymous</td>
+                                                {% else %}
+                                                    <td width="15%" style="text-align:center"><a href="/{{post.employee.email}}/employeeprofile">{{post.employee.firstName}} {{post.employee.lastName}}</a></td>
+                                                {% endif %}
+                                                <td width="25%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">{{post.subject}}</a></td>
+                                                <td width="5%" style="text-align:center"><a href="{% url 'account:post' postId=comment.postId %}">{{post.numComments}}</a></td>
+                                                <td width="5%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">{{post.when}}</a></td>
+                                                <td width="15%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">{{post.status}}</a></td>
+                                            </form>
+                                        </tr>
+                                    {% endfor %}
                                 </table>
                             </div>
                     </div>

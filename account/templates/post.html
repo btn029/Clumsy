@@ -4,14 +4,13 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Employee Home</title>
+    <title>Post</title>
     
     <!-- Bootstrap Core CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -32,13 +31,13 @@
               <nav class="navbar navbar-inverse navbar-fixed-top">
                 <div class="container">
                   <div class="navbar-header">
-                    <a class="navbar-header" href="employeehome"><img src="https://i.imgur.com/PvSdW8h.png" alt="logo" width="80" height="50" style="float:left;"/></a>   
+                    <a class="navbar-header" href="/{{currentUser.email}}/employeehome"><img src="https://i.imgur.com/PvSdW8h.png" alt="logo" width="80" height="50" style="float:left;"/></a>   
                   </div>
                   <div id="navbar" class="navbar-collapse collapse">
   
                     <ul class="nav navbar-nav" style="float:right;">
-                        <li><a href="employeehome">Home</a></li>
-                        <li class="active"><a href="postlist">Posts</a></li>
+                        <li><a href="/{{currentUser.email}}/employeehome">Home</a></li>
+                        <li class="active"><a href="/{{currentUser.email}}/postlist">Posts</a></li>
                         <li><a href="{% url 'account:logout' %}">Log Out</a></li>
                     </ul>
                       
@@ -49,40 +48,98 @@
             </div>
     </div>
 
-    <form role="form" action="" method="post">
-        {% csrf_token %}
-            <section id="writereview">
-                <div class="container">
-                    <div class="row">
-                        <h3> Create a Post </h3>
-                        <p>Create a post for your sub</p>
-
-                            <div class="form-group" style="text-align: center;">
-                                {{ form.comment.errors }}
-                                <br>{{ form.subject }}
-                            </div>
-                            <div class="form-group" style="text-align: center;">
-                                {{ form.comment.errors }}
-                                <br>{{ form.post }}
-                            </div>
-                            <div class="form-group">
-                                {{ form.password.errors }}
-                                {% for radio in form.userType %}
+    <form role="form" method="post">
+    {% csrf_token %}
+    <div class="col-sm-12">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-default text-left">
+                        <div style="float:left; margin-left:10%; margin-top: 20px; margin-bottom:10px">    
+                            <a class="btn btn-lg btn-primary" href="newcomment" role="button">Reply</a>
+                            {% if post.employee != currentUser %}
+                            <a role="button" class="btn btn-lg" style="background-color:lightgray" href="/{{currentUser.email}}/postlist">Back</a>
+                            {% endif %}
+                        </div>
+                        {% if post.employee == currentUser %}
+                        <div style="float:right; margin-right: 10%; margin-top:20px; margin-bottom:10px">
+                            {{form.non_field_errors}}
+                            {% for radio in form.status %}
                                 <label class="switch">
                                     {{radio}}
-                                    &nbsp; <!-- for spacing -->
+                                    &nbsp;
                                 </label>
-                                {% endfor %}
-                            </div>
-                            <div class="clearfix">
-                                <div id="success">
-                                    <button onclick="" type="submit" class="btn btn-xl" style="display: block; margin: 0 auto;">Update</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>   
-            </section>   
-        </form> 
+                            {% endfor %}
+                            <button type="submit" class="btn btn-lg btn-primary" name="update">Update Status</button>
+                            <a role="button" class="btn btn-lg" style="background-color:lightgray" href="/{{currentUser.email}}/postlist">Back</a>
+                        </div>   
+                        {% endif %}
+                        {% if post.employee != currentUser %}
+                        <div class="row" style="margin-left: auto; margin-right: auto; margin-top:63px;">
+                        {% endif %}    
+                        <table width=80%>
+                            <tr>
+                            {% if post.anonymity == "Anonymous" %}
+                                <td width="15%">
+                                    <h3>Anonymous</h3>
+                                    <img src="{% static 'media/no-img.png' %}" class="img-thumbnail" style="margin-bottom: 10px" width="100" height="100">
+                                </td>
+                            {% else %}
+                                        <td width = "15%"><a href="/{{post.employee.email}}/employeeprofile"><h3>{{post.employee.firstName}} {{post.employee.lastName}}</h3>
+                                        <h4>{{post.employee.department}}</h4>
+                                        {% if post.employee.profilePic %}
+                                            <img src="{{post.employee.profilePic.url}}" class="img-thumbnail" style="margin-bottom: 10px" width="100" height="100">
+                                        {% else %}
+                                            <img src="{% static 'media/no-img.png' %}" class="img-thumbnail" style="margin-bottom: 10px" height="100" width="100">
+                                        {% endif %}
+                                        </a>
+                                    </td>
+                                
+                            {% endif %}
+                                <td width="65%">
+                                    <span style="color:grey; float:left">Posted at {{post.when}}</span> 
+                                    <hr>
+                                    <span style="float:left; color: black; font-size:14px; font-family: Arial; font-weight:normal">{{post.post}}</span>
+                                </td>
+                            </tr>
+                        </table>
+                        {% if post.employee != currentUser %}
+                         </div>
+                        {% endif %}    
+                        {% for comment in comments %}
+                        <table width="80%">
+                            
+                            <tr>
+                            {% if comment.anonymity == "Anonymous" %}
+                                <td width="15%">
+                                    <h3>Anonymous</h3>
+                                    <img src="{% static 'media/no-img.png' %}" class="img-thumbnail" style="margin-bottom: 10px" width="100" height="100">
+                                </td>
+                            {% else %}
+                                <a href="employeehome">
+                                    <td width = "15%"><a href="/{{comment.employee.email}}/employeeprofile">
+                                        <h3>{{comment.employee.firstName}} {{comment.employee.lastName}}</h3>
+                                        <h4>{{comment.employee.department}}</h4>
+                                        {% if comment.employee.profilePic %}
+                                            <img src="{{comment.employee.profilePic.url}}" class="img-thumbnail" style="margin-bottom: 10px" width="100" height="100">
+                                        {% else %}
+                                            <img src="{% static 'media/no-img.png' %}" class="img-thumbnail" style="margin-bottom: 10px" height="100" width="100">
+                                        {% endif %}
+                                        </a>
+                                    </td>
+                                </a>
+                            {% endif %}
+                                <td width="65%"><span style="color:grey; float:left">Replied at {{comment.when}}</span> 
+                                <hr>
+                                    <span style="float:left; color: black; font-size:14px; font-family: Arial; font-weight:normal">{{comment.comment}}</span>
+                                </td>
+                            </tr>
+                        </table>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
 </body>
 </html>

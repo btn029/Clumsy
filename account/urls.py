@@ -13,9 +13,11 @@ urlpatterns = [
     url(r'^logout$', v.logout,  name='logout'),
     url(r'^(?P<employeeEmail>.*)/postlist$', v.postlist, name='postlist'),
     url(r'^(?P<employeeEmail>.*)/employeehome$', v.employeehome, name='employeehome'),
+    url(r'^(?P<employeeEmail>.*)/employeeprofile$', v.employeeprofile, name='employeeprofile'),
     url(r'^(?P<postId>.*)/post$', v.post, name='post'),
-    url(r'^(?P<postId>.*)/editpost$', v.editpost, name='editpost'),
+    url(r'^(?P<employeeEmail>.*)/editprofile$', v.editprofile, name='editprofile'),
     url(r'^(?P<employeeEmail>.*)/newpost$', v.newpost, name='newpost'),
+    url(r'^(?P<postId>.*)/newcomment$', v.newcomment, name='newcomment'),
     url(r'^(?P<postId>[0-9]+)/delete$', v.deletepost, name='deletepost')
 
 

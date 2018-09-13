@@ -4,14 +4,13 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Create A Post</title>
+    <title>Create a Response</title>
     
     <!-- Bootstrap Core CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -32,13 +31,13 @@
               <nav class="navbar navbar-inverse navbar-fixed-top">
                 <div class="container">
                   <div class="navbar-header">
-                    <a class="navbar-header" href="employeehome"><img src="https://i.imgur.com/PvSdW8h.png" alt="logo" width="80" height="50" style="float:left;"/></a>   
+                    <a class="navbar-header" href="/{{currentUser.email}}/employeehome"><img src="https://i.imgur.com/PvSdW8h.png" alt="logo" width="80" height="50" style="float:left;"/></a>   
                   </div>
                   <div id="navbar" class="navbar-collapse collapse">
   
                     <ul class="nav navbar-nav" style="float:right;">
-                        <li><a href="employeehome">Home</a></li>
-                        <li class="active"><a href="postlist">Posts</a></li>
+                        <li><a href="/{{currentUser.email}}/employeehome">Home</a></li>
+                        <li class="active"><a href="/{{currentUser.email}}/postlist">Posts</a></li>
                         <li><a href="{% url 'account:logout' %}">Log Out</a></li>
                     </ul>
                       
@@ -60,16 +59,11 @@
             <section id="writereview">
                 <div class="container">
                     <div class="row">
-                        <h3> Create a Post </h3>
-                        <p>Ask a question or post some information!</p>
-
-                            <div class="form-group" style="text-align: center;">
-                                {{ form.comment.errors }}
-                                <br>{{ form.subject }}
-                            </div>
+                        <h3>Create a Reply</h3>
+                        <p>Reply to the post!</p>
                             <div style="text-align: center;">
                                 {{ form.comment.errors }}
-                                <br>{{ form.post }}
+                                <br>{{ form.comment }}
                             </div>
                             <div class="form-group">
                                 <h4>How do you want your name to be displayed:</h4>
@@ -84,9 +78,9 @@
                             <div class="clearfix">
                                 <div id="success">
                                     <div class="row" style="text-align: center;">
-                                        <dt id="target" style="display: inline;"><button class="btn btn-primary btn-lg" type="submit">Create Post</button></dt>
+                                        <dt id="target" style="display: inline;"><button class="btn btn-primary btn-lg" type="submit">Reply</button></dt>
                                         <dt style="display: inline;">
-                                        <a role="button" class="btn btn-lg" style="background-color:lightgray" href="postlist">Cancel</a>
+                                        <a role="button" class="btn btn-lg" style="background-color:lightgray" href="post">Cancel</a>
                                         </dt>
                                     </div>
                                 </div>
@@ -94,7 +88,7 @@
                         </div>
                     </div>   
             </section>   
-        </form> 
+        </form>    
 
 </body>
 </html>
