@@ -17,6 +17,7 @@ class Employee(models.Model):
     address = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True) #other wanted information
     profilePic = models.ImageField(upload_to="Profile Pictures", blank=True)
+    admin = models.CharField(max_length=200, default="No")
     def __str__(self):
         return 'Employee Name: %s %s' % (self.firstName, self.lastName)
 
@@ -30,6 +31,7 @@ class Post(models.Model):
     status = models.CharField(max_length=200, default="Unresolved")
     anonymity = models.CharField(max_length=200)
     numComments = models.IntegerField(default=0)
+    visibility = models.CharField(max_length=200, default="Not Seen")
     def __str__(self):
         return 'Posted by %s %s at %s postId: %s' % (self.employee.firstName, self.employee.lastName, self.when, self.postId)
 

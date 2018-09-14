@@ -88,7 +88,7 @@
                                             {% csrf_token %}
                                                 <tr style="color: #0000EE">
                                                     <td width="30%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">{{post.subject}}</a></td>
-                                                    <td width="5%" style="text-align:center"><a href="{% url 'account:post' postId=comment.postId %}">{{post.numComments}}</a></td>
+                                                    <td width="5%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">{{post.numComments}}</a></td>
                                                     <td width="10%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">{{post.when}}</a></td>
                                                     <td width="15%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">{{post.status}}</a></td>
                                                 </tr>

@@ -38,6 +38,13 @@ class UpdateForm(forms.Form):
     ]
     status = forms.ChoiceField(choices=STATUS, widget=forms.RadioSelect())
 
+class VisibilityForm(forms.Form):
+    VISIBILITY = [
+        ('Not Seen', 'Not Seen'),
+        ('Seen', 'Seen')
+    ]
+    visibility = forms.ChoiceField(choices=VISIBILITY, widget=forms.RadioSelect())
+
 class EditProfileForm(forms.Form):
     phone = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '(800) 123-4567', 'size': 40, 'class': 'form-control'}))
     department = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Clumsy Employee', 'size': 40, 'class': 'form-control'}))

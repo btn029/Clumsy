@@ -83,9 +83,10 @@
                                             <tr>
                                                 <td width="5%">Anonymous?</td>
                                                 <td width="25%">Subject</td>
-                                                <td width="5%"># of Replies</td>
+                                                <td width="3%"># of Replies</td>
                                                 <td width="10%">Date Posted</td>
-                                                <td width="15%">Status</td>
+                                                <td width="12%">Status</td>
+                                                <td width="5%">Visibility</td>
                                             </tr>
                                             {% for post in postList %}
                                             {% csrf_token %}
@@ -96,9 +97,10 @@
                                                     <td width="5%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">No</a></td>
                                                 {% endif %}
                                                     <td width="25%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">{{post.subject}}</a></td>
-                                                    <td width="5%" style="text-align:center"><a href="{% url 'account:post' postId=comment.postId %}">{{post.numComments}}</a></td>
+                                                    <td width="3%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">{{post.numComments}}</a></td>
                                                     <td width="10%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">{{post.when}}</a></td>
-                                                    <td width="15%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">{{post.status}}</a></td>
+                                                    <td width="12%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">{{post.status}}</a></td>
+                                                    <td width="5%" style="text-align:center"><a href="{% url 'account:post' postId=post.postId %}">{{post.visibility}}</a></td>
                                                 </tr>
                                             {% endfor %}
                                         </form>

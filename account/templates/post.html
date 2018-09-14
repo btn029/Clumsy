@@ -69,7 +69,20 @@
                                     &nbsp;
                                 </label>
                             {% endfor %}
-                            <button type="submit" class="btn btn-lg btn-primary" name="update">Update Status</button>
+                            <button type="submit" class="btn btn-lg btn-primary" name="updatestatus">Update Status</button>
+                            <a role="button" class="btn btn-lg" style="background-color:lightgray" href="/{{currentUser.email}}/postlist">Back</a>
+                        </div>   
+                        {% endif %}
+                        {% if post.employee != currentUser and currentUser.admin == "Yes" %}
+                        <div style="float:right; margin-right: 10%; margin-top:20px; margin-bottom:10px">
+                            {{visibility.non_field_errors}}
+                            {% for radio in visibility.visibility %}
+                                <label class="switch">
+                                    {{radio}}
+                                    &nbsp;
+                                </label>
+                            {% endfor %}
+                            <button type="submit" class="btn btn-lg btn-primary" name="updatevisibility">Update Visibility</button>
                             <a role="button" class="btn btn-lg" style="background-color:lightgray" href="/{{currentUser.email}}/postlist">Back</a>
                         </div>   
                         {% endif %}
@@ -77,6 +90,11 @@
                         <div class="row" style="margin-left: auto; margin-right: auto; margin-top:63px;">
                         {% endif %}    
                         <table width=80%>
+                            <tr>
+                                {% if currentUser == post.employee %}
+                                    <a href="{% url 'account:deletepost' postId=post.postId %}">Delete</a>
+                                {% endif %}
+                            </tr>
                             <tr>
                             {% if post.anonymity == "Anonymous" %}
                                 <td width="15%">
@@ -103,11 +121,10 @@
                             </tr>
                         </table>
                         {% if post.employee != currentUser %}
-                         </div>
+                        </div>
                         {% endif %}    
                         {% for comment in comments %}
-                        <table width="80%">
-                            
+                        <table width="80%">    
                             <tr>
                             {% if comment.anonymity == "Anonymous" %}
                                 <td width="15%">

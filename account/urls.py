@@ -18,7 +18,7 @@ urlpatterns = [
     url(r'^(?P<employeeEmail>.*)/editprofile$', v.editprofile, name='editprofile'),
     url(r'^(?P<employeeEmail>.*)/newpost$', v.newpost, name='newpost'),
     url(r'^(?P<postId>.*)/newcomment$', v.newcomment, name='newcomment'),
-    url(r'^(?P<postId>[0-9]+)/delete$', v.deletepost, name='deletepost')
+    url(r'^(?P<postId>.*)/deletepost$', v.deletepost, name='deletepost')
 
 
 ]   

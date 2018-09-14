@@ -9,7 +9,7 @@ from django import forms
 from django.contrib import messages
 
 from .models import Employee, Post, Comment
-from .forms import SignupForm, LoginForm, PostForm, CommentForm, UpdateForm, EditProfileForm
+from .forms import SignupForm, LoginForm, PostForm, CommentForm, UpdateForm, EditProfileForm, VisibilityForm
 
 import hashlib
 from datetime import datetime
@@ -252,6 +252,7 @@ def post(request, postId):
         userEmail = request.session['email']
         employee = Employee.objects.get(email=userEmail)
         form = UpdateForm(data=request.POST)
+        visibilityForm=VisibilityForm(data=request.POST)
         try:
             post = Post.objects.get(postId=postId)
         except ObjectDoesNotExist:
@@ -266,11 +267,15 @@ def post(request, postId):
             if(form.is_valid()):   
                 status = form.cleaned_data['status']
                 post.status = status
-                post.save()
-                outURL = '/{0}/{1}'.format(userEmail,'postlist')
-                return HttpResponseRedirect(outURL)
+            if(visibilityForm.is_valid()):  
+                visibility = visibilityForm.cleaned_data['visibility']
+                post.visibility = visibility
+            post.save()
+            outURL = '/{0}/{1}'.format(userEmail,'postlist')
+            return HttpResponseRedirect(outURL)
+
         else:
-            return render(request, 'post.html', {'post': post, 'currentUser':employee, 'form': form, 'comments':comments})
+            return render(request, 'post.html', {'post': post, 'currentUser':employee, 'form': form, 'comments':comments, 'visibility':visibilityForm})
 
 def editpost(request, postId):
     return render(request, 'account/editpost.html')
@@ -340,5 +345,5 @@ def deletepost(request, postId):
         employeeEmail = request.session['email']
         postObj = Post.objects.get(postId=postId)
         postObj.delete()
-        outURL = '../{0}/postlist.html'.format(employeeEmail)
+        outURL = '../{0}/postlist'.format(employeeEmail)
         return HttpResponseRedirect(outURL)
